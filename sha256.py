@@ -1,3 +1,4 @@
+#这个代码是抄的
 SHA_BLOCKSIZE = 64
 SHA_DIGESTSIZE = 32
 

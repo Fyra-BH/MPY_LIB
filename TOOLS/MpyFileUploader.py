@@ -23,7 +23,7 @@ except: baud = 115200
 with serial.Serial() as ser:
     ser.baudrate = baud
     ser.port = com
-    ser.timeout = 5
+    ser.timeout = 1
     ser.open()
     ser.write(b"\r\n")
     while True:
@@ -50,25 +50,30 @@ with serial.Serial() as ser:
     cmd = bytes('f_tmp = open("{0:}{1:}","wb")\r\n'.format(dist_file, filename), encoding="utf-8")
     ser.write(cmd)
     f1 = open(local_file, "rb")
+    bytes_cnt = 0
     while True:
         buf = str(list(f1.read(PER_SIZE)))
         cmd = bytes("buf_tmp = bytes({0:})\r\n".format(buf) , encoding="utf-8")
         ser.write(cmd)
-        print(str(ser.readline(),encoding="utf-8"))
+        _ = (str(ser.readline(),encoding="utf-8"))
         cmd = b"f_tmp.write(buf_tmp)\r\n"
         ser.write(cmd)
         while True:
             line = str(ser.readline(),encoding="utf-8")
             try:
                 count = int(line)
+                bytes_cnt += count
                 print("count = ", count)
                 break
-            except: print(line)
-
+            except: 
+                if len(line) < 50:
+                    print(line)
+        print(bytes_cnt//1024,"KB written")
         if len(buf) < PER_SIZE: break
+            
     cmd = b"f_tmp.close()\r\n"
     ser.write(cmd)
-    ser.timeout = 0.5
+    ser.timeout =2
     while True:
         line = str(ser.readline(),encoding="utf-8")
         print(line)

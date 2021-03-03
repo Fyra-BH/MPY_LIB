@@ -6,7 +6,7 @@
 
 在终端中输入 
 
-gcc main.c ez_fft.c -o out
+gcc *.c* -o out
 ./out
 
 即可看到测试输出
@@ -15,6 +15,10 @@ gcc main.c ez_fft.c -o out
 
 单独提供简单的fft函数
 
-## mod_ez_fft.c
+## fft_Ngenerator.py
+
+用于自动生成N点fft代码
+
+## mpy_port
 
 提供micropython接口，可作为模块编译进固件

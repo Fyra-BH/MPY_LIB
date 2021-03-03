@@ -3,19 +3,19 @@
 import math
 
 str_buff = [\
+"#include <stdio.h>",
+"#include <stdlib.h>",
+"#include <math.h>",
+'#include "ez_fft.h"',
+"",
 "void fft_N(float* buff)",
 "{",
-"    complex_t tmp[N];",
-"    for (size_t i = 0; i < N; i++)",
-"    {",
-"        tmp[i].re = *(buff + 2 * i);",
-"        tmp[i].im = *(buff + 2 * i + 1 );",
-"    }",
-"    complex_t buff_c[N];",
+"    complex_t* buff_c = (complex_t*)malloc(sizeof(complex_t) * N);",
 "    //将原序列的序号比特翻转，并存入临时数组",
 "    for (size_t i = 0; i < N; i++)",
 "    {",
-"        buff_c[i] = tmp[bit_reverse(i, bitLen)];",
+"        buff_c[i].re = *(buff + 2 * bit_reverse(i, bitLen));",
+"        buff_c[i].im = *(buff + 2 * bit_reverse(i, bitLen) + 1);",
 "    }",
 ]
 
@@ -25,6 +25,7 @@ str_buff_end =[\
 "        *(buff + i * 2) = buff_c[i].re;",
 "        *(buff + i * 2 + 1) = buff_c[i].im;",
 "    }",
+"    free(buff_c);",
 "}"
 ]
 

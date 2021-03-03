@@ -6,8 +6,15 @@
 
 在终端中输入 
 
-gcc *.c* -o out
-./out
+make -j4
+
+完成编译，然后
+
+./build/out
+
+或
+
+./build/out.exe
 
 即可看到测试输出
 

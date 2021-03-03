@@ -238,7 +238,6 @@ void fft_32(float* buff)
     for (size_t i = 0; i < 32; i++)
     {
         buff_c[i] = tmp[bit_reverse(i, 5)];
-        // printf("buff_c[%d] = tmp[%d];\n", i, bit_reverse(i, 5));
     }
     complex_t w0 = W(32, 0);
     complex_t w1 = W(32, 1);

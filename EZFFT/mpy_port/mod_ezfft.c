@@ -26,7 +26,10 @@ STATIC mp_obj_t ez_fftN(mp_obj_t buffer)
         return mp_obj_new_bool(0);
     }
     //由于复数列buffer是实部虚部交错的，所以len要除以2
-    return mp_obj_new_bool(!fft_N(array->len / 2, (float*)(array->items)));
+    if(!fft_N(array->len / 2, (float*)(array->items)))
+        return buffer;
+    else
+        return mp_obj_new_bool(0);
 }
 
 STATIC MP_DEFINE_CONST_FUN_OBJ_1(ez_fft_fftN_obj, ez_fftN);

@@ -17,9 +17,7 @@ DEFS :=\
 
 INCLUDE:= $(patsubst %, -I%, $(INCDIRS))
 
-CFILES:=\
-main.c \
-ez_fft.c
+CFILES:=$(foreach dir,$(SRCDIRS),$(wildcard $(dir)/*.c))
 # 库
 LIBS:=\
 -lm \

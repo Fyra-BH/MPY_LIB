@@ -25,11 +25,6 @@ STATIC mp_obj_t ez_fftN(mp_obj_t buffer)
         printf("please input float array");
         return mp_obj_new_bool(0);
     }
-    if (array->len != 16)
-    {
-        printf("length wrong");
-        return mp_obj_new_bool(0);
-    }
     return mp_obj_new_bool(!fft_N(array->len, (float*)(array->items)));
 }
 
@@ -53,7 +48,7 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_1(ez_fft_abs_obj, ez_fft_abs);
 
 STATIC const mp_rom_map_elem_t ezfft_module_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_ezfft) },
-    { MP_ROM_QSTR(MP_QSTR_fftN), MP_ROM_PTR(&ez_fft_fftN_obj) },
+    { MP_ROM_QSTR(MP_QSTR_fft), MP_ROM_PTR(&ez_fft_fftN_obj) },
     { MP_ROM_QSTR(MP_QSTR_memtest), MP_ROM_PTR(&ez_fft_memtest_obj) },
     { MP_ROM_QSTR(MP_QSTR_ezabs), MP_ROM_PTR(&ez_fft_abs_obj) },
 };

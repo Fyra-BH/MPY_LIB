@@ -30,7 +30,7 @@ STATIC mp_obj_t ez_fftN(mp_obj_t buffer)
         printf("length wrong");
         return mp_obj_new_bool(0);
     }
-    return mp_obj_new_bool(!fft_N(arrar->N, (float*)(array->items)));
+    return mp_obj_new_bool(!fft_N(array->len, (float*)(array->items)));
 }
 
 STATIC MP_DEFINE_CONST_FUN_OBJ_1(ez_fft_fftN_obj, ez_fftN);

@@ -6,7 +6,7 @@
 
 在终端中输入 
 
-make -j4
+make 
 
 完成编译，然后
 
@@ -21,10 +21,6 @@ make -j4
 ## ez_fft.c/ez_fft.h
 
 单独提供简单的fft函数
-
-## fft_Ngenerator.py
-
-用于自动生成N点fft代码
 
 ## mpy_port
 

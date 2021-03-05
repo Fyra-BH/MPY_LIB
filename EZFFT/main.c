@@ -2,7 +2,6 @@
 
 void  fft_test(int N)
 {
-    
     if (!ezlog2(N)) 
     {
         printf("不支持的长度\n");

@@ -1,7 +1,7 @@
 #include "ez_fft.h"
 #include "py/runtime.h"
 #include "py/objarray.h"
-#include <stdio.h>
+
 
 STATIC mp_obj_t ez_memtest(mp_obj_t len_obj)
 {

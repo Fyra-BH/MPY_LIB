@@ -115,6 +115,7 @@ void ezfft_abs(float* buff, int N)
 int ezlog2(int N)
 {
     int ret = 0;
+    if(N == 1) return 0;
     while (!(N&0x01))
     {
         N >>= 1;

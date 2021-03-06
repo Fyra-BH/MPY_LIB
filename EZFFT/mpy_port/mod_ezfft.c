@@ -25,9 +25,11 @@ STATIC mp_obj_t ez_fftN(mp_obj_t buffer)
         printf("please input float array");
         return mp_obj_new_bool(0);
     }
+    //长度必须是偶数
+    if(array->len % 2) return mp_obj_new_bool(0);
     //由于复数列buffer是实部虚部交错的，所以len要除以2
     if(!fft_N(array->len / 2, (float*)(array->items)))
-        return buffer;
+        return mp_obj_new_bool(1);
     else
         return mp_obj_new_bool(0);
 }

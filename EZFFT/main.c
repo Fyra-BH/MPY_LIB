@@ -40,6 +40,7 @@ int main(int argc, char const *argv[])
 { 
     float a = 0.8;
     int N = 0;
+    printf("log2(1) = %d\n",ezlog2(1));
     while (1)
     {
         printf("请输入fft的长度N, 输入0退出:\n");

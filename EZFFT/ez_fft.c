@@ -115,7 +115,6 @@ void ezfft_abs(float* buff, int N)
 int ezlog2(int N)
 {
     int ret = 0;
-    if(N == 1) return 0;
     while (!(N&0x01))
     {
         N >>= 1;
@@ -137,7 +136,7 @@ int ezlog2(int N)
  */
 int fft_N(int N, float* buff)
 {
-    if(ezlog2(N) == 0) return 1;
+    if(ezlog2(N) == 0 ) return 1;
     complex_t* buff_c = (complex_t*)malloc(sizeof(complex_t) * N);
     //将原序列的序号比特翻转，并存入临时数组
     for (size_t i = 0; i < N; i++)

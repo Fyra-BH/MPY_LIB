@@ -19,7 +19,7 @@ STATIC mp_obj_t i2s_read_buff(mp_obj_t buffer)
     mp_obj_array_t* array = (mp_obj_array_t *)buffer;
     if(array->typecode != 'f') return mp_obj_new_bool(0);
     if(array->len == 0) return mp_obj_new_bool(0);
-    int *buff_ints = (int*)m_malloc(array->len / 2);
+    uint16_t *buff_ints = (uint16_t*)m_malloc(array->len / 2 * sizeof(uint16_t));
     my_i2s_read(array->len * 4 / 2,buff_ints);
     s16_to_float(array->len, buff_ints, array->items);
     m_free(buff_ints);
@@ -31,7 +31,7 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_1(i2s_read_buff_obj, i2s_read_buff);
 STATIC const mp_rom_map_elem_t i2s_adc_module_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_i2s_adc) },
     { MP_ROM_QSTR(MP_QSTR_init), MP_ROM_PTR(&i2s_adc_init_obj) },
-    { MP_ROM_QSTR(MP_QSTR_read), MP_ROM_PTR(&i2s_read_buff_obj) },
+    { MP_ROM_QSTR(MP_QSTR_read_to_array), MP_ROM_PTR(&i2s_read_buff_obj) },
 };
 STATIC MP_DEFINE_CONST_DICT(i2s_adc_module_globals, i2s_adc_module_globals_table);
 

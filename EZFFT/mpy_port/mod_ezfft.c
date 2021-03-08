@@ -45,8 +45,6 @@ STATIC mp_obj_t ez_fft_abs(mp_obj_t buffer)
         return mp_obj_new_bool(0);
     }
     ezfft_abs(array->items, array->len / 2);
-    array->items = (float *)m_realloc(array->items, sizeof(float) * array->len /2);
-    array->len = array->len / 2;
     return buffer;
 }
 

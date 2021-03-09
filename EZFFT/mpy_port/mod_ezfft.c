@@ -36,6 +36,44 @@ STATIC mp_obj_t ez_fftN(mp_obj_t buffer)
 
 STATIC MP_DEFINE_CONST_FUN_OBJ_1(ez_fft_fftN_obj, ez_fftN);
 
+//实序列的fft
+STATIC mp_obj_t ez_fftN_real(mp_obj_t buffer)
+{
+    mp_obj_array_t* array = (mp_obj_array_t *)buffer;
+    if(array->typecode != 'f')
+    {
+        printf("please input float array");
+        return mp_obj_new_bool(0);
+    }
+    float *buff_tmp = (float*)malloc(sizeof(float) * (array->len) * 2);
+    if(buff_tmp == NULL)
+    {
+        printf("malloc failed\n");
+        mp_obj_new_bool(0);
+    }
+
+    for (size_t i = 0; i < array->len; i++)
+    {
+        *(buff_tmp + i * 2) = *((float*)(array->items) + i);
+        *(buff_tmp + i * 2 + 1) = 0;
+    }
+    if(fft_N(array->len, buff_tmp))
+    {
+        printf("fft failed\n");
+        return mp_obj_new_bool(0);
+    }
+    ezfft_abs(buff_tmp, array->len);
+    for (size_t i = 0; i < array->len; i++)
+    {
+        *((float*)(array->items) + i) = *((float*)(buff_tmp) + i);
+    }
+    free(buff_tmp);
+    return mp_obj_new_bool(1);
+
+}
+
+STATIC MP_DEFINE_CONST_FUN_OBJ_1(ez_fft_fftN_real_obj, ez_fftN_real);
+
 STATIC mp_obj_t ez_fft_abs(mp_obj_t buffer)
 {
     mp_obj_array_t* array = (mp_obj_array_t *)buffer;
@@ -53,6 +91,7 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_1(ez_fft_abs_obj, ez_fft_abs);
 STATIC const mp_rom_map_elem_t ezfft_module_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_ezfft) },
     { MP_ROM_QSTR(MP_QSTR_fft), MP_ROM_PTR(&ez_fft_fftN_obj) },
+    { MP_ROM_QSTR(MP_QSTR_fft_real), MP_ROM_PTR(&ez_fft_fftN_real_obj) },
     { MP_ROM_QSTR(MP_QSTR_memtest), MP_ROM_PTR(&ez_fft_memtest_obj) },
     { MP_ROM_QSTR(MP_QSTR_ezabs), MP_ROM_PTR(&ez_fft_abs_obj) },
 };

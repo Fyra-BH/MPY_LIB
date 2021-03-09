@@ -2,6 +2,8 @@
 #include "py/runtime.h"
 #include "py/objarray.h"
 
+#include <stdlib.h>
+
 extern int my_i2s_read(int Nbytes, void* buff);
 extern void example_i2s_init(void);
 extern void s16_to_float(int len_of_int, __uint16_t* src, float* dst);
@@ -19,10 +21,11 @@ STATIC mp_obj_t i2s_read_buff(mp_obj_t buffer)
     mp_obj_array_t* array = (mp_obj_array_t *)buffer;
     if(array->typecode != 'f') return mp_obj_new_bool(0);
     if(array->len == 0) return mp_obj_new_bool(0);
-    uint16_t *buff_ints = (uint16_t*)m_malloc(array->len / 2 * sizeof(uint16_t));
+    uint16_t *buff_ints = (uint16_t*)malloc(array->len  * sizeof(uint16_t));
+    if(buff_ints == NULL) return mp_obj_new_bool(0);
     my_i2s_read(array->len * 4 / 2,buff_ints);
     s16_to_float(array->len, buff_ints, array->items);
-    m_free(buff_ints);
+    free(buff_ints);
     return mp_obj_new_bool(1);
 }
 

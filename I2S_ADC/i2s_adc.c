@@ -33,12 +33,12 @@
 /**
  * @brief I2S ADC/DAC mode init.
  */
-void example_i2s_init(void)
+void example_i2s_init(int fs)
 {
      int i2s_num = EXAMPLE_I2S_NUM;
      i2s_config_t i2s_config = {
         .mode = I2S_MODE_MASTER | I2S_MODE_RX | I2S_MODE_TX | I2S_MODE_DAC_BUILT_IN | I2S_MODE_ADC_BUILT_IN,
-        .sample_rate =  EXAMPLE_I2S_SAMPLE_RATE,
+        .sample_rate =  fs,
         .bits_per_sample = EXAMPLE_I2S_SAMPLE_BITS,
         .communication_format = I2S_COMM_FORMAT_I2S_MSB,
         .channel_format = EXAMPLE_I2S_FORMAT,
@@ -47,6 +47,7 @@ void example_i2s_init(void)
         .dma_buf_len = 1024,
         .use_apll = 1,
      };
+     i2s_driver_uninstall(i2s_num);
      //install and start i2s driver
      i2s_driver_install(i2s_num, &i2s_config, 0, NULL);
      //init DAC pad
@@ -64,7 +65,7 @@ void s16_to_float(int len_of_int, void* src, void* dst)
    float* _dst = (float*) dst;
    for (size_t i = 0; i < len_of_int; i++)
    {
-      * _dst++ = (float)(* _src++)* 2 / 4096;
+      * _dst++ = (float)(* _src++) *2 / 4096;
    }
 }
 

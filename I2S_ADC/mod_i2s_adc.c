@@ -5,16 +5,16 @@
 #include <stdlib.h>
 
 extern int my_i2s_read(int Nbytes, void* buff);
-extern void example_i2s_init(void);
+extern void example_i2s_init(int fs);
 extern void s16_to_float(int len_of_int, __uint16_t* src, float* dst);
 
-STATIC mp_obj_t i2s_adc_init(void)
+STATIC mp_obj_t i2s_adc_init(mp_obj_t fs_obj)
 {
-    example_i2s_init();
+    example_i2s_init(mp_obj_get_int(fs_obj));
     return mp_obj_new_bool(1);
 }
 
-STATIC MP_DEFINE_CONST_FUN_OBJ_0(i2s_adc_init_obj, i2s_adc_init);
+STATIC MP_DEFINE_CONST_FUN_OBJ_1(i2s_adc_init_obj, i2s_adc_init);
 
 STATIC mp_obj_t i2s_read_buff(mp_obj_t buffer)
 {

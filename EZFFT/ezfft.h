@@ -1,5 +1,5 @@
-#ifndef __EZ_FFT__H
-#define __EZ_FFT__H
+#ifndef __EZFFT__H
+#define __EZFFT__H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,5 +21,14 @@ complex_t W(int N, int k);
 complex_t add_c(complex_t a, complex_t b);
 complex_t sub_c(complex_t a, complex_t b);
 complex_t multi_c(complex_t a, complex_t b);
+
+#ifdef DEBUG_ON_PC
+    #define ezfft_malloc malloc
+    #define ezfft_free free
+#else
+    #include "py/runtime.h"
+    #define ezfft_malloc m_malloc
+    #define ezfft_free m_free
+#endif
 
 #endif

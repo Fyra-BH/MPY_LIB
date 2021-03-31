@@ -1,4 +1,4 @@
-#include "ez_fft.h"
+#include "ezfft.h"
 
 void  fft_test(int N)
 {
@@ -8,7 +8,7 @@ void  fft_test(int N)
         return;
     } 
     
-    float *x = (float*)malloc(sizeof(float) * N * 2);
+    float *x = (float*)ezfft_malloc(sizeof(float) * N * 2);
     float fs = 8000.0;//采样率
     float f0 = 440;//待测频率
     for (int i = 0; i < N; i++)

@@ -1,4 +1,4 @@
-#include "ez_fft.h"
+#include "ezfft.h"
 #include "py/runtime.h"
 #include "py/objarray.h"
 
@@ -6,13 +6,13 @@
 STATIC mp_obj_t ez_memtest(mp_obj_t len_obj)
 {
     int len = mp_obj_get_int(len_obj);
-    char* p = (char*)malloc(len);
+    char* p = (char*)ezfft_malloc(len);
     if(p == NULL) return mp_obj_new_bool(0);
     for (size_t i = 0; i < len; i++)
     {
         *(p + i) = 0x33;
     }
-    free(p);
+    ezfft_free(p);
     return mp_obj_new_bool(1);
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_1(ez_fft_memtest_obj, ez_memtest);
@@ -45,10 +45,10 @@ STATIC mp_obj_t ez_fftN_real(mp_obj_t buffer)
         printf("please input float array");
         return mp_obj_new_bool(0);
     }
-    float *buff_tmp = (float*)malloc(sizeof(float) * (array->len) * 2);
+    float *buff_tmp = (float*)ezfft_malloc(sizeof(float) * (array->len) * 2);
     if(buff_tmp == NULL)
     {
-        printf("malloc failed\n");
+        printf("ezfft_malloc failed\n");
         mp_obj_new_bool(0);
     }
 
@@ -67,7 +67,7 @@ STATIC mp_obj_t ez_fftN_real(mp_obj_t buffer)
     {
         *((float*)(array->items) + i) = *((float*)(buff_tmp) + i);
     }
-    free(buff_tmp);
+    ezfft_free(buff_tmp);
     return mp_obj_new_bool(1);
 
 }

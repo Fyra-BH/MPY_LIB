@@ -29,6 +29,7 @@ LIBS:=\
 CFLAGS:=\
 -g \
 -m32 \
+-DDEBUG_ON_PC \
 
 # -fno-stack-protector
 

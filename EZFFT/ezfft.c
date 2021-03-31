@@ -1,4 +1,4 @@
-#include "ez_fft.h"
+#include "ezfft.h"
 
 /**
  * @brief bit reverse
@@ -73,8 +73,8 @@ complex_t sub_c(complex_t a, complex_t b)
 complex_t W(int N, int k)
 {
     complex_t ret;
-    ret.re =  cos(2 * PI / N * k);
-    ret.im = -sin(2 * PI / N * k);
+    ret.re =  cosf(2 * PI / N * k);
+    ret.im = -sinf(2 * PI / N * k);
     return ret;
 }
 
@@ -103,7 +103,7 @@ void butterfly_compu(complex_t* a, complex_t* b, complex_t w)
 void ezfft_abs(float* buff, int N)
 {
     for (int i = 0; i < N; i++)
-        *(buff + i) = pow(*(buff + i * 2) * *(buff + i * 2) + *(buff + i * 2 + 1) * *(buff + i * 2 + 1), 0.5);
+        *(buff + i) = powf(*(buff + i * 2) * *(buff + i * 2) + *(buff + i * 2 + 1) * *(buff + i * 2 + 1), 0.5);
 }
 
 /**
@@ -137,14 +137,14 @@ int ezlog2(int N)
 int fft_N(int N, float* buff)
 {
     if(ezlog2(N) == 0 ) return 1;
-    complex_t* buff_c = (complex_t*)malloc(sizeof(complex_t) * N);
+    complex_t* buff_c = (complex_t*)ezfft_malloc(sizeof(complex_t) * N);
     //将原序列的序号比特翻转，并存入临时数组
     for (size_t i = 0; i < N; i++)
     {
         buff_c[i].re = *(buff + 2 * bit_reverse(i, ezlog2(N)));
         buff_c[i].im = *(buff + 2 * bit_reverse(i, ezlog2(N)) + 1);
     }
-    complex_t *w = (complex_t *)malloc(sizeof(complex_t) * N / 2);
+    complex_t *w = (complex_t *)ezfft_malloc(sizeof(complex_t) * N / 2);
     for (int i = 0; i < N / 2; i++)
         *(w + i) = W(N, i);
     //蝶形运算
@@ -168,7 +168,7 @@ int fft_N(int N, float* buff)
         *(buff + i * 2) = buff_c[i].re;
         *(buff + i * 2 + 1) = buff_c[i].im;
     }
-    free(buff_c);
-    free(w);
+    ezfft_free(buff_c);
+    ezfft_free(w);
     return 0;
 }

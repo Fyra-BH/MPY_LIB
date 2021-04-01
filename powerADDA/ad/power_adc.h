@@ -1,3 +1,6 @@
+#ifndef POWER_ADC__H
+#define POWER_ADC__H
+
 /**
  * @file power_adc.h
  * @author Fyra-BH (fyra@foxmail.com)
@@ -9,3 +12,4 @@
  * 
  */
 
+#endif //POWER_ADC__H

@@ -21,13 +21,13 @@
 
     static void simu_lowlevel_dac_init(uint16_t bitwidth);
     static void simu_lowlevel_timer_init(uint16_t freq);
-    static void simu_timer_cb_register(void (*cb)(void));
-    static void simu_data_collect(void);
+    static void simu_timer_cb_register(void (*cb)(void *args), void *args);
+    static void simu_work_cb(void *args);
 
     #define lowlevel_dac_init       simu_lowlevel_dac_init
     #define lowlevel_timer_init     simu_lowlevel_timer_init
     #define timer_cb_register       simu_timer_cb_register
-    #define data_collect            simu_data_collect
+    #define work_cb            simu_work_cb
 #else
     #include "py/runtime.h"
     #define mem_alloc m_malloc
@@ -55,7 +55,8 @@ int8_t powerDaInit(dac_ctrl_word *dac, uint16_t bitwidth, uint16_t buff_size, ui
 
     lowlevel_dac_init(bitwidth);                    //配置dac
     lowlevel_timer_init(sample_freq);               //配置定时器，使能中断，频率为 sample_freq Hz
-    timer_cb_register(data_collect);
+    timer_cb_register(work_cb, NULL);                //注册回调函数
+
     dac->buff_size = buff_size;
     dac->buff1 = mem_alloc(buff_size);
     dac->buff2 = mem_alloc(buff_size);
@@ -69,7 +70,11 @@ int8_t powerDaInit(dac_ctrl_word *dac, uint16_t bitwidth, uint16_t buff_size, ui
 
 
 #ifdef DEBUG_ON_PC
+
 uint16_t simu_bitwidth = 0;
+void (*timer_cb)(void *args) = NULL;
+void *timer_cb_args = NULL;
+
 static void simu_lowlevel_dac_init(uint16_t bitwidth)
 {
     simu_bitwidth = bitwidth;
@@ -79,11 +84,11 @@ static void simu_lowlevel_timer_init(uint16_t freq)
 {
     ;
 }
-static void simu_timer_cb_register(void (*cb)(void))
+static void simu_timer_cb_register(void (*cb)(void *args), void *args)
 {
-    ;
+    timer_cb = cb;
 }
-static void simu_data_collect(void)
+static void simu_work_cb(void *args)
 {
     ;
 }

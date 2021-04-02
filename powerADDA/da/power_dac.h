@@ -31,14 +31,15 @@ typedef enum
  */
 typedef struct 
 {
-    uint16_t    state_flag;     //模块当前状态
-    uint16_t    bitwidth;       //dac位数
-    uint16_t    buff_size;      //缓冲区大小(以字节为单位)
-    uint16_t    sample_freq;    //采样率
-    void        *buff1;         //缓冲区1
-    void        *buff2;         //缓冲区2
-    enum_dabuff_state buff1_sta;//缓冲区1状态
-    enum_dabuff_state buff2_sta;//缓冲区2状态
+    uint16_t    state_flag;         //模块当前状态
+    uint16_t    bitwidth;           //dac位数
+    uint16_t    buff_size;          //缓冲区大小(以字节为单位)
+    uint16_t    sample_freq;        //采样率
+    void        *buff1;             //缓冲区1
+    void        *buff2;             //缓冲区2
+    enum_dabuff_state buff1_sta;    //缓冲区1状态
+    enum_dabuff_state buff2_sta;    //缓冲区2状态
+    void (*callback)(void *args);   //回调函数
 }dac_ctrl_word;
 
 int8_t powerDaInit(dac_ctrl_word *dac, uint16_t bitwidth, uint16_t buff_size, uint16_t sample_freq);

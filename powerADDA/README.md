@@ -8,3 +8,7 @@ da目录下放dac代码
 mpy_port下放micropython接口
 
 使用该模块以达到高速采样的效果
+
+注意：
+1   初始版本仅支持F405
+2   不要与pyb.adc pyb.dac混用

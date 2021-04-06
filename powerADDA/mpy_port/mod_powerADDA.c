@@ -3,16 +3,15 @@
 
 #include "stdio.h"
 
-extern int MX_TIM5_Init(void);
-extern void tim5_start_it(void);
-
+extern void MX_TIM4_Init(void);
+extern void start_tim4();
 STATIC mp_obj_t powerADDA_init(mp_obj_t freq_obj)
 {
     int freq = mp_obj_get_int(freq_obj);
-    int bl = MX_TIM5_Init();
+    MX_TIM4_Init();
+    start_tim4();
     printf("freq=%d\n", freq);
-    tim5_start_it();
-    return mp_obj_new_bool(!bl);
+    return mp_obj_new_bool(1);
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_1(powerADDA_init_obj, powerADDA_init);
 

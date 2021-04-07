@@ -41,15 +41,16 @@ void MX_TIM4_Init(void)
     printf("Error_Handler();\n");
   }
 
-  //HAL_TIM_Base_Start_IT(&htim4);
+  
+  __HAL_RCC_TIM4_CLK_ENABLE();
+  /* TIM4 interrupt Init */
+  HAL_NVIC_SetPriority(TIM4_IRQn, 10, 0);
+  HAL_NVIC_EnableIRQ(TIM4_IRQn);
   printf("OK\n");
 }
 void start_tim4()
 {
-  __HAL_RCC_TIM4_CLK_ENABLE();
-  /* TIM4 interrupt Init */
-  HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(TIM4_IRQn);
+  HAL_Delay(10);
   HAL_TIM_Base_Start_IT(&htim4);
 }
 

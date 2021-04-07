@@ -11,6 +11,14 @@
 
 #include "rque_fifo.h"
 #include "stdlib.h"
+
+
+#ifdef R_QUE_USE_MALLOC
+
+#include "py/runtime.h"
+
+#endif
+
 /**
  * @brief 初始化一个队列
  * 
@@ -20,8 +28,8 @@
 uint8_t rque_init(rque_t *rque)
 {
     uint16_t len = MAX_BUFF_SIZE;
-#ifdef USE_MALLOC
-    if (!(rque->buff = (uint8_t)malloc(len)))
+#ifdef R_QUE_USE_MALLOC
+    if (!(rque->buff = (uint8_t)m_malloc(len)))
     {
         return 1;
     }

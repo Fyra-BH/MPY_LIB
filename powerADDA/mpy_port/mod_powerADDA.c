@@ -2,14 +2,20 @@
 #include "py/objarray.h"
 
 #include "stdio.h"
+#include "rque_fifo.h"
 
-extern void MX_TIM4_Init(void);
-extern void start_tim4();
+extern void POWERADDA_TIM4_Init(void);
+extern void timer4_start_it(void);
+extern void POWERADDA_DAC_Init(void);
+extern void dac_start(void);
+
 STATIC mp_obj_t powerADDA_init(mp_obj_t freq_obj)
 {
     int freq = mp_obj_get_int(freq_obj);
-    MX_TIM4_Init();
-    start_tim4();
+    POWERADDA_TIM4_Init();
+    timer4_start_it();
+    POWERADDA_DAC_Init();
+    dac_start();
     printf("freq=%d\n", freq);
     return mp_obj_new_bool(1);
 }

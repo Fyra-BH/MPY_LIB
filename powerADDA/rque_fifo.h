@@ -21,7 +21,7 @@ typedef struct
     uint8_t empty;
     uint32_t head;
     uint32_t rear;
-#ifdef USE_MALLOC
+#ifdef R_QUE_USE_MALLOC
     uint8_t *buff;
 #else
     uint8_t buff[MAX_BUFF_SIZE];

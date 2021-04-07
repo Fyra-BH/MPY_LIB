@@ -10,6 +10,7 @@
  */
 
 #include "stm32f4xx_hal.h"
+#include "rque_fifo.h"
 #include "stdio.h"
 
 TIM_HandleTypeDef htim4;
@@ -52,7 +53,6 @@ void POWERADDA_TIM4_Init(void)
     printf("Error_Handler();\n");
   }
 
-  printf("OK\n");
 }
 
 void timer4_start_it(void)
@@ -77,7 +77,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
     /* Peripheral clock enable */
     __HAL_RCC_TIM4_CLK_ENABLE();
     /* TIM4 interrupt Init */
-    HAL_NVIC_SetPriority(TIM4_IRQn, 10, 0);
+    HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(TIM4_IRQn);
   /* USER CODE BEGIN TIM4_MspInit 1 */
 
@@ -110,19 +110,30 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
 }
 
 extern DAC_HandleTypeDef hdac;
+extern rque_t Q_dac;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *TIM)
 {
   static int cnt = 0;
 
-	HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 4096/2);	
   if (TIM->Instance == TIM4)
-  {
+  {	
+    uint8_t tmp = 0;
+    uint16_t data = 0;
+    if (rque_read(&Q_dac, &tmp)) return;
+    else
+    {
+      data = tmp * 256;//先读高字节
+      rque_read(&Q_dac, &tmp);
+      data += tmp;//再读低字节
+    }
+    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, data);	
+
     cnt++;
     if (cnt == 48000)
     {
       cnt = 0;
-      printf("GG\n");
+      // printf("GG\n");
     }
   }
 }

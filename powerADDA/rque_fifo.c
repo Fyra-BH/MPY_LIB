@@ -29,7 +29,7 @@ uint8_t rque_init(rque_t *rque)
 {
     uint16_t len = MAX_BUFF_SIZE;
 #ifdef R_QUE_USE_MALLOC
-    if (!(rque->buff = (uint8_t)m_malloc(len)))
+    if (!(rque->buff = (uint8_t *)m_malloc(len)))
     {
         return 1;
     }

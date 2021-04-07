@@ -56,7 +56,6 @@ void POWERADDA_DAC_Init(void)
 
 void dac_start(void)
 {
-
 	HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 4095);
 	HAL_DAC_Start(&hdac, DAC_CHANNEL_1);
 }

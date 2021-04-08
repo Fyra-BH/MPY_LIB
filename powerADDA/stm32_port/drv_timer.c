@@ -108,6 +108,7 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef *htim_base)
 }
 
 extern DAC_HandleTypeDef hdac;
+extern ADC_HandleTypeDef hadc1;
 extern rque_t Q_dac;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *TIM)
@@ -118,12 +119,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *TIM)
   {
     uint8_t tmp = 0;
     uint16_t data = 0;
+
     if (rque_read(&Q_dac, &tmp))
     {
       HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 0);
       return;
     }
-
     else
     {
       data = tmp * 256; //先读高字节
@@ -132,11 +133,20 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *TIM)
     }
     HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, data);
 
+
+    // uint32_t val = HAL_ADC_GetValue(&hadc1);
+    // HAL_ADC_Start(&hadc1);
+    // data = val;//强制转化为16位
+    // tmp = data / 256;//先高字节
+    // rque_write(&Q_dac,tmp);
+    // tmp = data % 256;//再低字节
+    // rque_write(&Q_dac,tmp);
+
     cnt++;
     if (cnt == 48000)
     {
       cnt = 0;
-      // printf("GG\n");
+      // printf("running\n");
     }
   }
 }

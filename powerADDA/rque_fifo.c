@@ -12,11 +12,8 @@
 #include "rque_fifo.h"
 #include "stdlib.h"
 
-
 #ifdef R_QUE_USE_MALLOC
-
 #include "py/runtime.h"
-
 #endif
 
 /**
@@ -63,12 +60,12 @@ uint8_t rque_write(rque_t *rque, uint8_t data)
         rque->empty = 0;
     }
 
-    if(rque->full == 1) //阻塞
+    if (rque->full == 1) //阻塞
     {
         ret = 1;
         return ret;
     }
-    rque->buff[rque->head++ % max_size ] = data;
+    rque->buff[rque->head++ % max_size] = data;
 
     if (rque->head % max_size == rque->rear % max_size)
     {
@@ -76,7 +73,6 @@ uint8_t rque_write(rque_t *rque, uint8_t data)
     }
     return ret;
 }
-
 
 /**
  * @brief 从队列读一个数据
@@ -98,7 +94,7 @@ uint8_t rque_read(rque_t *rque, uint8_t *data)
     {
         rque->full = 0;
     }
-    *data = rque->buff[rque->rear++ % max_size ];
+    *data = rque->buff[rque->rear++ % max_size];
     if (rque->head % max_size == rque->rear % max_size)
     {
         rque->empty = 1;

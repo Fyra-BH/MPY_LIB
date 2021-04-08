@@ -8,18 +8,26 @@ extern void POWERADDA_TIM4_Init(void);
 extern void timer4_start_it(void);
 extern void POWERADDA_DAC_Init(void);
 extern void dac_start(void);
+extern void POWERADDA_ADC1_Init(void);
+extern void adc_start(void);
 
 rque_t Q_dac = {0};
 rque_t Q_adc = {0};
 
 STATIC mp_obj_t powerADDA_init(void)
 {
-    POWERADDA_TIM4_Init();
-    timer4_start_it();
-    POWERADDA_DAC_Init();
-    dac_start();
+    //初始化两个队列
     rque_init(&Q_dac);
     rque_init(&Q_adc);
+
+    POWERADDA_DAC_Init();
+    dac_start();
+    POWERADDA_ADC1_Init();
+    adc_start();
+    
+    POWERADDA_TIM4_Init();
+    timer4_start_it();
+
     return mp_obj_new_int(0);
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_0(powerADDA_init_obj, powerADDA_init);
@@ -38,9 +46,9 @@ STATIC mp_obj_t powerADDA_send_to_dac(mp_obj_t buffer)
     for (int i = 0; i < array->len; i++)
     {
         // printf("write %d\n",*p);
-        while (rque_write(&Q_dac, *p / 256))
+        while (rque_write(&Q_dac, *p / 256))//先写高字节
             ; //do nothing
-        while (rque_write(&Q_dac, *p % 256))
+        while (rque_write(&Q_dac, *p % 256))//再写低字节
             ; //do nothing
         p++;
     }

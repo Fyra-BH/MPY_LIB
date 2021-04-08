@@ -8,8 +8,8 @@
  * @copyright Copyright (c) 2021
  * 
  */
-#ifndef RQUE__H
-#define RQUE__H
+#ifndef __RQUE__H
+#define __RQUE__H
 
 #include <stdint.h>
 

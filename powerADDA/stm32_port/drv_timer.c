@@ -120,7 +120,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *TIM)
     uint16_t data = 0;
     if (rque_read(&Q_dac, &tmp))
     {
-      HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 0);
+      HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 0);
       return;
     }
 
@@ -130,7 +130,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *TIM)
       rque_read(&Q_dac, &tmp);
       data += tmp; //再读低字节
     }
-    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, data);
+    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, data);
 
     cnt++;
     if (cnt == 48000)

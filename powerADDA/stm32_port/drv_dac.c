@@ -1,7 +1,7 @@
 /**
  * @file drv_dac.c
  * @author Fyra-BH (fyra@foxmail.com)
- * @brief stm32 dac 通道一 12位 PA4 X5
+ * @brief stm32 dac 通道2 12位 X6,PA5
  * @version 0.1
  * @date 2021-04-07
  * 
@@ -44,7 +44,7 @@ void POWERADDA_DAC_Init(void)
   */
   sConfig.DAC_Trigger = DAC_TRIGGER_NONE;
   sConfig.DAC_OutputBuffer = DAC_OUTPUTBUFFER_ENABLE;
-  if (HAL_DAC_ConfigChannel(&hdac, &sConfig, DAC_CHANNEL_1) != HAL_OK)
+  if (HAL_DAC_ConfigChannel(&hdac, &sConfig, DAC_CHANNEL_2) != HAL_OK)
   {
     // Error_Handler();
   }
@@ -56,8 +56,8 @@ void POWERADDA_DAC_Init(void)
 
 void dac_start(void)
 {
-	HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 4095);
-	HAL_DAC_Start(&hdac, DAC_CHANNEL_1);
+	HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 4095);
+	HAL_DAC_Start(&hdac, DAC_CHANNEL_2);
 }
 
 /**
@@ -81,7 +81,7 @@ void HAL_DAC_MspInit(DAC_HandleTypeDef* hdac)
     /**DAC GPIO Configuration
     PA4     ------> DAC_OUT1
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_4;
+    GPIO_InitStruct.Pin = GPIO_PIN_5;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -112,7 +112,7 @@ void HAL_DAC_MspDeInit(DAC_HandleTypeDef* hdac)
     /**DAC GPIO Configuration
     PA4     ------> DAC_OUT1
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_4);
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_5);
 
   /* USER CODE BEGIN DAC_MspDeInit 1 */
 

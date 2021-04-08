@@ -40,7 +40,8 @@ uint8_t rque_init(rque_t *rque)
     rque->rear = 0;
     rque->full = 0;
     rque->empty = 1;
-
+    rque->lock = 0;
+    rque->len = MAX_BUFF_SIZE;
     return 0;
 }
 
@@ -53,8 +54,7 @@ uint8_t rque_init(rque_t *rque)
  */
 uint8_t rque_write(rque_t *rque, uint8_t data)
 {
-    uint16_t max_size = MAX_BUFF_SIZE;
-    uint8_t ret = 0;
+    uint16_t max_size = rque->len;
     if (rque->empty)
     {
         rque->empty = 0;
@@ -62,16 +62,23 @@ uint8_t rque_write(rque_t *rque, uint8_t data)
 
     if (rque->full == 1) //阻塞
     {
-        ret = 1;
-        return ret;
+        return 1;
     }
+
     rque->buff[rque->head++ % max_size] = data;
 
     if (rque->head % max_size == rque->rear % max_size)
     {
         rque->full = 1;
     }
-    return ret;
+
+    if (rque->head > max_size && rque->rear > max_size)
+    {
+        rque->head -= max_size;
+        rque->rear -= max_size;
+    }
+    
+    return 0;
 }
 
 /**
@@ -84,11 +91,15 @@ uint8_t rque_write(rque_t *rque, uint8_t data)
 uint8_t rque_read(rque_t *rque, uint8_t *data)
 {
     uint16_t max_size = MAX_BUFF_SIZE;
-    uint8_t ret = 0;
+
+    if (rque->lock)
+    {
+        return 1;
+    }
+
     if (rque->empty == 1)
     {
-        ret = 1;
-        return ret;
+        return 1;
     }
     if (rque->full)
     {
@@ -99,5 +110,23 @@ uint8_t rque_read(rque_t *rque, uint8_t *data)
     {
         rque->empty = 1;
     }
-    return ret;
+
+    if (rque->head > max_size && rque->rear > max_size)
+    {
+        rque->head -= max_size;
+        rque->rear -= max_size;
+    }
+
+    return 0;
+}
+
+/**
+ * @brief 给队列上锁
+ * 
+ * @param rque 队列结构体指针
+ * @param val 0代表解锁，其他代表上锁
+ */
+void rque_set_lock(rque_t *rque, uint8_t val)
+{
+    rque->lock = val;
 }

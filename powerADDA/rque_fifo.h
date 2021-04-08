@@ -19,8 +19,10 @@ typedef struct
 {
     uint8_t full;
     uint8_t empty;
-    uint32_t head;
-    uint32_t rear;
+    uint8_t lock;//互斥锁
+    uint16_t head;
+    uint16_t rear;
+    uint16_t len;
 #ifdef R_QUE_USE_MALLOC
     uint8_t *buff;
 #else
@@ -31,5 +33,6 @@ typedef struct
 uint8_t rque_init(rque_t *rque);
 uint8_t rque_write(rque_t *rque, uint8_t data);
 uint8_t rque_read(rque_t *rque, uint8_t *data);
+void rque_set_lock(rque_t *rque, uint8_t val);
 
 #endif

@@ -52,7 +52,6 @@ void POWERADDA_TIM4_Init(void)
     // Error_Handler();
     printf("Error_Handler();\n");
   }
-
 }
 
 void timer4_start_it(void)
@@ -60,28 +59,27 @@ void timer4_start_it(void)
   HAL_TIM_Base_Start_IT(&htim4);
 }
 
-
 /**
 * @brief TIM_Base MSP Initialization
 * This function configures the hardware resources used in this example
 * @param htim_base: TIM_Base handle pointer
 * @retval None
 */
-void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
+void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim_base)
 {
-  if(htim_base->Instance==TIM4)
+  if (htim_base->Instance == TIM4)
   {
-  /* USER CODE BEGIN TIM4_MspInit 0 */
+    /* USER CODE BEGIN TIM4_MspInit 0 */
 
-  /* USER CODE END TIM4_MspInit 0 */
+    /* USER CODE END TIM4_MspInit 0 */
     /* Peripheral clock enable */
     __HAL_RCC_TIM4_CLK_ENABLE();
     /* TIM4 interrupt Init */
     HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(TIM4_IRQn);
-  /* USER CODE BEGIN TIM4_MspInit 1 */
+    /* USER CODE BEGIN TIM4_MspInit 1 */
 
-  /* USER CODE END TIM4_MspInit 1 */
+    /* USER CODE END TIM4_MspInit 1 */
   }
 }
 
@@ -91,21 +89,21 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
 * @param htim_base: TIM_Base handle pointer
 * @retval None
 */
-void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
+void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef *htim_base)
 {
-  if(htim_base->Instance==TIM4)
+  if (htim_base->Instance == TIM4)
   {
-  /* USER CODE BEGIN TIM4_MspDeInit 0 */
+    /* USER CODE BEGIN TIM4_MspDeInit 0 */
 
-  /* USER CODE END TIM4_MspDeInit 0 */
+    /* USER CODE END TIM4_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_TIM4_CLK_DISABLE();
 
     /* TIM4 interrupt DeInit */
     HAL_NVIC_DisableIRQ(TIM4_IRQn);
-  /* USER CODE BEGIN TIM4_MspDeInit 1 */
+    /* USER CODE BEGIN TIM4_MspDeInit 1 */
 
-  /* USER CODE END TIM4_MspDeInit 1 */
+    /* USER CODE END TIM4_MspDeInit 1 */
   }
 }
 
@@ -117,17 +115,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *TIM)
   static int cnt = 0;
 
   if (TIM->Instance == TIM4)
-  {	
+  {
     uint8_t tmp = 0;
     uint16_t data = 0;
-    if (rque_read(&Q_dac, &tmp)) return;
+    if (rque_read(&Q_dac, &tmp))
+    {
+      HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 0);
+      return;
+    }
+
     else
     {
-      data = tmp * 256;//先读高字节
+      data = tmp * 256; //先读高字节
       rque_read(&Q_dac, &tmp);
-      data += tmp;//再读低字节
+      data += tmp; //再读低字节
     }
-    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, data);	
+    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, data);
 
     cnt++;
     if (cnt == 48000)

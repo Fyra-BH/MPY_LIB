@@ -4,6 +4,8 @@
 #include "stdio.h"
 #include "rque_fifo.h"
 
+static uint8_t init_flag = 0;//初始化标志位
+
 extern void POWERADDA_TIM4_Init(void);
 extern void timer4_start_it(void);
 extern void POWERADDA_DAC_Init(void);
@@ -28,12 +30,21 @@ STATIC mp_obj_t powerADDA_init(void)
     POWERADDA_TIM4_Init();
     timer4_start_it();
 
+    init_flag = 1;//初始化标记
+
     return mp_obj_new_int(0);
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_0(powerADDA_init_obj, powerADDA_init);
 
 STATIC mp_obj_t powerADDA_send_to_dac(mp_obj_t buffer)
 {
+
+    if(!init_flag)
+    {
+        printf("please call init() first!!!\n");
+        return mp_obj_new_bool(0);
+    }
+
     mp_obj_array_t *array = (mp_obj_array_t *)buffer;
     if (array->typecode != 'H')
     {
@@ -46,12 +57,10 @@ STATIC mp_obj_t powerADDA_send_to_dac(mp_obj_t buffer)
     for (int i = 0; i < array->len; i++)
     {
         // printf("write %d\n",*p);
-        rque_set_lock(&Q_dac,1);
         while (rque_write(&Q_dac, *p / 256)) //先写高字节
             ;                                //do nothing
         while (rque_write(&Q_dac, *p % 256)) //再写低字节
             ;                                //do nothing
-        rque_set_lock(&Q_dac,0);
         p++;
     }
 
@@ -61,6 +70,12 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_1(powerADDA_send_to_dac_obj, powerADDA_send_to_da
 
 STATIC mp_obj_t powerADDA_read_from_adc(mp_obj_t buffer)
 {
+    if(!init_flag)
+    {
+        printf("please call init() first!!!\n");
+        return mp_obj_new_bool(0);
+    }
+
     mp_obj_array_t *array = (mp_obj_array_t *)buffer;
     if (array->typecode != 'H')
     {
@@ -79,7 +94,7 @@ STATIC mp_obj_t powerADDA_read_from_adc(mp_obj_t buffer)
     {
         // printf("write %d\n",*p);
         while (rque_read(&Q_adc, &tmp))
-            ; //do nothing
+            ;           //do nothing
         *p = tmp * 256; //先读高字节
 
         while (rque_read(&Q_adc, &tmp))
@@ -95,12 +110,12 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_1(powerADDA_read_from_adc_obj, powerADDA_read_fro
 
 STATIC mp_obj_t powerADDA_status(void)
 {
-    printf("Q_adc.full = %d\n",Q_adc.full);
-    printf("Q_adc.empty = %d\n",Q_adc.empty);
-    printf("Q_dac.full = %d\n",Q_dac.full);
-    printf("Q_dac.empty = %d\n",Q_dac.empty);
+    printf("Q_adc.full = %d\n", Q_adc.full);
+    printf("Q_adc.empty = %d\n", Q_adc.empty);
+    printf("Q_dac.full = %d\n", Q_dac.full);
+    printf("Q_dac.empty = %d\n", Q_dac.empty);
 
-    return  mp_obj_new_bool(1);
+    return mp_obj_new_bool(1);
 }
 
 STATIC MP_DEFINE_CONST_FUN_OBJ_0(powerADDA_status_obj, powerADDA_status);

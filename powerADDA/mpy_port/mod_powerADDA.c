@@ -30,6 +30,9 @@ STATIC mp_obj_t powerADDA_init(void)
     POWERADDA_TIM4_Init();
     timer4_start_it();
 
+    printf("use pin X1 as adc\n");
+    printf("use pin X6 as dac\n");
+
     init_flag = 1;//初始化标记
 
     return mp_obj_new_int(0);

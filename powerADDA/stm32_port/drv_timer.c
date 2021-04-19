@@ -117,33 +117,18 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *TIM)
 
   if (TIM->Instance == TIM4)
   {
-    uint8_t tmp = 0;
     uint16_t data = 0;
 
     uint32_t val = HAL_ADC_GetValue(&hadc1);
     HAL_ADC_Start(&hadc1);
     // val = 1024;
     data = val;       //强制转化为16位
-    tmp = data / 256; //先高字节
-    rque_write(&Q_adc, tmp);
-    tmp = data % 256; //再低字节
-    rque_write(&Q_adc, tmp);
+    rque_write(&Q_adc, data);
 
-    if (rque_read(&Q_dac, &tmp))
+    if (rque_read(&Q_dac, &data))
     {
       // HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 0);
       return;
-    }
-    else
-    {
-      data = tmp * 256; //先读高字节
-      rque_read(&Q_dac, &tmp);
-      data += tmp; //再读低字节
-    }
-    if (data >= 4096) //错位了，需要丢弃一位
-    {
-      rque_read(&Q_dac, &tmp);
-      // HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 0);
     }
     HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, data);
 

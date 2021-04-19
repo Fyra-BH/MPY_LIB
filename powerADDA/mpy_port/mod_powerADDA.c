@@ -57,9 +57,7 @@ STATIC mp_obj_t powerADDA_send_to_dac(mp_obj_t buffer)
     for (int i = 0; i < array->len; i++)
     {
         // printf("write %d\n",*p);
-        while (rque_write(&Q_dac, *p / 256)) //先写高字节
-            ;                                //do nothing
-        while (rque_write(&Q_dac, *p % 256)) //再写低字节
+        while (rque_write(&Q_dac, *p ))
             ;                                //do nothing
         p++;
     }
@@ -89,18 +87,11 @@ STATIC mp_obj_t powerADDA_read_from_adc(mp_obj_t buffer)
         return mp_obj_new_bool(0);
     }
     uint16_t *p = (uint16_t *)array->items;
-    uint8_t tmp = 0;
     for (int i = 0; i < array->len; i++)
     {
         // printf("write %d\n",*p);
-        while (rque_read(&Q_adc, &tmp))
+        while (rque_read(&Q_adc, p))
             ;           //do nothing
-        *p = tmp * 256; //先读高字节
-
-        while (rque_read(&Q_adc, &tmp))
-            ; //do nothing
-        *p += tmp; //再读低字节
-
         p++;
     }
     return buffer;

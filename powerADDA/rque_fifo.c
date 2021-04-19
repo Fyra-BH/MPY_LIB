@@ -26,7 +26,7 @@ uint8_t rque_init(rque_t *rque)
 {
     uint16_t len = MAX_BUFF_SIZE;
 #ifdef R_QUE_USE_MALLOC
-    if (!(rque->buff = (uint8_t *)m_malloc(len)))
+    if (!(rque->buff = (uint16_t *)m_malloc(len)))
     {
         return 1;
     }
@@ -40,7 +40,6 @@ uint8_t rque_init(rque_t *rque)
     rque->rear = 0;
     rque->full = 0;
     rque->empty = 1;
-    rque->lock = 0;
     rque->len = MAX_BUFF_SIZE;
     return 0;
 }
@@ -52,7 +51,7 @@ uint8_t rque_init(rque_t *rque)
  * @param data 要写入的数据
  * @return uint8_t 返回0代表成功
  */
-uint8_t rque_write(rque_t *rque, uint8_t data)
+uint8_t rque_write(rque_t *rque, uint16_t data)
 {
     uint16_t max_size = rque->len;
     if (rque->empty)
@@ -88,14 +87,9 @@ uint8_t rque_write(rque_t *rque, uint8_t data)
  * @param data 要读出的数据
  * @return uint8_t 返回0代表成功
  */
-uint8_t rque_read(rque_t *rque, uint8_t *data)
+uint8_t rque_read(rque_t *rque, uint16_t *data)
 {
     uint16_t max_size = MAX_BUFF_SIZE;
-
-    if (rque->lock)
-    {
-        return 1;
-    }
 
     if (rque->empty == 1)
     {
@@ -120,13 +114,3 @@ uint8_t rque_read(rque_t *rque, uint8_t *data)
     return 0;
 }
 
-/**
- * @brief 给队列上锁
- * 
- * @param rque 队列结构体指针
- * @param val 0代表解锁，其他代表上锁
- */
-void rque_set_lock(rque_t *rque, uint8_t val)
-{
-    rque->lock = val;
-}

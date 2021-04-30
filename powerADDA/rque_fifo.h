@@ -13,7 +13,9 @@
 
 #include <stdint.h>
 
+#ifndef MAX_BUFF_SIZE
 #define MAX_BUFF_SIZE 1024
+#endif
 
 typedef struct
 {

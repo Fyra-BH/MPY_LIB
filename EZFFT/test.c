@@ -39,14 +39,26 @@ void  fft_test(int N)
 int main(int argc, char const *argv[])
 { 
     float a = 0.8;
-    int N = 0;
-    printf("log2(1) = %d\n",ezlog2(1));
-    while (1)
+    int N = 16;
+    float *buff = (float *)malloc(N * 2 * sizeof(float));
+    for (int i = 0; i < N; i++)
     {
-        printf("请输入fft的长度N, 输入0退出:\n");
-        scanf("%d", &N);
-        if(N == 0) break;
-        fft_test(N);
+        *(buff + i * 2) = powf(a, i);
+        *(buff + i * 2 + 1) = 0;
     }
+    ifft_N(N, buff);
+    for (int i = 0; i < N; i++)
+    {
+        printf("(%f, %f)\n",*(buff + i * 2), *(buff + i * 2 + 1));
+    }
+    
+    // while (1)
+    // {
+    //     printf("请输入fft的长度N, 输入0退出:\n");
+    //     scanf("%d", &N);
+    //     if(N == 0) break;
+    //     fft_test(N);
+    // }
+
     return 0;
 }

@@ -3,11 +3,12 @@ TARGET :=out
 #build 目录
 BUILD_DIR=build
 
-CC :=gcc
+CC := gcc
 
-SZ :=size
+SZ := size
 # 头文件目录
-INCDIRS:=\
+INCDIRS:= \
+test \
 # 源文件目录
 SRCDIRS:=\
 ./
@@ -18,8 +19,8 @@ DEFS :=\
 INCLUDE:= $(patsubst %, -I%, $(INCDIRS))
 
 CFILES:=\
-main.c \
-ez_fft.c
+test.c \
+ezfft.c
 # 库
 LIBS:=\
 -lm \
@@ -28,7 +29,6 @@ LIBS:=\
 # 标志
 CFLAGS:=\
 -g \
--m32 \
 -DDEBUG_ON_PC \
 
 # -fno-stack-protector

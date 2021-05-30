@@ -16,7 +16,7 @@ MSG =[
 '''
 下载给定url的文件
 '''
-def get(url, path=None, buffsize=1024):
+def get(url, path=None, buffsize=1024, timeout=1):
     info = url.split('/')
     if buffsize < 1024: buffsize = 1024 # set an appropriate buffsize, lager than 1024
     if(info[0] == 'http:'):
@@ -27,23 +27,31 @@ def get(url, path=None, buffsize=1024):
 
             host = socket.getaddrinfo(domain,80)[0][-1][0] # get ipaddr of server
             client = socket.socket()
-            client.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 1024*4)
+            client.settimeout(timeout)
             client.connect((host, 80))
             client.send('\r\n'.join(MSG).format(url, host).encode('utf8'))
             
+            # 删去信息头
             rsp=client.recv(buffsize) # we need to remove some extral information from the first frame 
             rsp = rsp[rsp.index(b'Content-Type') : ]
             rsp = rsp[rsp.index(b'\r\n') + 4 : ]
             
-            with open(file_name, 'wb') as fp:
-                fp.write(rsp)
-                while True:
-                    rsp=client.recv(buffsize) # we need to remove some extral information from the first frame 
+        except:
+            print("some problems occurred !")
+        # 开始下载   
+        with open(file_name, 'wb') as fp:
+            fp.write(rsp)
+            while True:
+                try:
+                    rsp=client.recv(buffsize) # we need to remove some extral information from the first frame                    
                     print(len(rsp))
                     if(len(rsp) == 0): break
                     fp.write(rsp)
-        except:
-            print("some problems occurred !")
+                except:
+                    print("finish")
+                    break
     else:
         print("protocol not supported")
+
+
 

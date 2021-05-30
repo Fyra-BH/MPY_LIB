@@ -36,6 +36,25 @@ STATIC mp_obj_t ez_fftN(mp_obj_t buffer)
 
 STATIC MP_DEFINE_CONST_FUN_OBJ_1(ez_fft_fftN_obj, ez_fftN);
 
+STATIC mp_obj_t ez_ifftN(mp_obj_t buffer)
+{
+    mp_obj_array_t* array = (mp_obj_array_t *)buffer;
+    if(array->typecode != 'f')
+    {
+        printf("please input float array");
+        return mp_obj_new_bool(0);
+    }
+    //长度必须是偶数
+    if(array->len % 2) return mp_obj_new_bool(0);
+    //由于复数列buffer是实部虚部交错的，所以len要除以2
+    if(!ifft_N(array->len / 2, (float*)(array->items)))
+        return mp_obj_new_bool(1);
+    else
+        return mp_obj_new_bool(0);
+}
+
+STATIC MP_DEFINE_CONST_FUN_OBJ_1(ez_fft_ifftN_obj, ez_ifftN);
+
 //实序列的fft
 STATIC mp_obj_t ez_fftN_real(mp_obj_t buffer)
 {
@@ -91,6 +110,7 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_1(ez_fft_abs_obj, ez_fft_abs);
 STATIC const mp_rom_map_elem_t ezfft_module_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_ezfft) },
     { MP_ROM_QSTR(MP_QSTR_fft), MP_ROM_PTR(&ez_fft_fftN_obj) },
+    { MP_ROM_QSTR(MP_QSTR_ifft), MP_ROM_PTR(&ez_fft_ifftN_obj) },
     { MP_ROM_QSTR(MP_QSTR_fft_real), MP_ROM_PTR(&ez_fft_fftN_real_obj) },
     { MP_ROM_QSTR(MP_QSTR_memtest), MP_ROM_PTR(&ez_fft_memtest_obj) },
     { MP_ROM_QSTR(MP_QSTR_ezabs), MP_ROM_PTR(&ez_fft_abs_obj) },

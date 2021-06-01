@@ -14,6 +14,7 @@ typedef struct complex
 
 void butterfly_compu(complex_t* a, complex_t* b, complex_t w);
 int fft_N(int N, float* buff);
+int ifft_N(int N, float* buff);
 int bit_reverse(int x, int bit_len);
 void ezfft_abs(float* buff, int N);
 int ezlog2(int N);

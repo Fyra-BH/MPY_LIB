@@ -76,7 +76,7 @@ void HAL_DAC_MspInit(DAC_HandleTypeDef* hdac)
 
     __HAL_RCC_GPIOA_CLK_ENABLE();
     /**DAC GPIO Configuration
-    PA4     ------> DAC_OUT1
+    PA5     ------> DAC_OUT1
     */
     GPIO_InitStruct.Pin = GPIO_PIN_5;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
